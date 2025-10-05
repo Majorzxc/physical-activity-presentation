@@ -3,4 +3,5 @@
 Презентация по профилактике поведенческих факторов риска.
 
 ## Просмотр
-[Открыть презентацию](https://ваш-username.github.io/название-репозитория/)
+
+[Открыть презентацию](https://Majorzxc.github.io/physical-activity-presentation/)
