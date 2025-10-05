@@ -4,15 +4,439 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Презентация: Низкая физическая активность</title>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .slide-box { 
+            background: white; 
+            border-radius: 20px; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .slide-content { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 60px 40px;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        h1 { font-size: 48px; color: white; text-align: center; margin-bottom: 20px; }
+        h2 { font-size: 36px; color: white; margin-bottom: 30px; }
+        .subtitle { font-size: 24px; color: rgba(255,255,255,0.9); text-align: center; }
+        .point { display: flex; margin-bottom: 15px; }
+        .bullet { 
+            width: 12px; 
+            height: 12px; 
+            background: white; 
+            border-radius: 50%; 
+            margin-top: 8px; 
+            margin-right: 15px; 
+            flex-shrink: 0; 
+        }
+        .point-text { font-size: 20px; color: white; line-height: 1.6; }
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 20px; 
+        }
+        .stat-card { 
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .stat-value { font-size: 36px; font-weight: bold; color: white; margin-bottom: 10px; }
+        .stat-label { font-size: 18px; color: rgba(255,255,255,0.9); }
+        .two-column { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 30px; 
+        }
+        .column { 
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .column h3 { font-size: 24px; color: white; margin-bottom: 15px; }
+        .column-item { display: flex; margin-bottom: 12px; }
+        .check { color: white; margin-right: 12px; flex-shrink: 0; font-size: 18px; }
+        .item-text { color: white; font-size: 18px; line-height: 1.5; }
+        .controls { 
+            background: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn { 
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        .btn-primary { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .btn-primary:disabled { 
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-quiz { 
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            box-shadow: 0 5px 20px rgba(240,147,251,0.4);
+        }
+        .btn-quiz:hover { transform: translateY(-2px); }
+        .progress { display: flex; align-items: center; gap: 15px; }
+        .slide-number { font-size: 18px; font-weight: 600; color: #333; }
+        .dots { display: flex; gap: 8px; }
+        .dot { 
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ddd;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .dot.active { width: 30px; background: #667eea; border-radius: 5px; }
+        .quiz-container { 
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .quiz-header { 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #f0f0f0;
+        }
+        .quiz-title { font-size: 32px; color: #333; }
+        .question { 
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: all 0.3s;
+        }
+        .question:hover { border-color: #667eea; box-shadow: 0 5px 15px rgba(102,126,234,0.1); }
+        .question-text { font-weight: 600; font-size: 18px; margin-bottom: 15px; color: #333; }
+        .option { 
+            width: 100%;
+            text-align: left;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            margin-bottom: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+        }
+        .option:hover { border-color: #667eea; background: #f8f9ff; }
+        .option.selected { border-color: #667eea; background: #f0f3ff; }
+        .radio { 
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .option.selected .radio { border-color: #667eea; background: #667eea; }
+        .radio-inner { 
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            display: none;
+        }
+        .option.selected .radio-inner { display: block; }
+        .submit-btn { 
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(102,126,234,0.3); }
+        .submit-btn:disabled { 
+            background: linear-gradient(135deg, #ccc 0%, #999 100%);
+            cursor: not-allowed;
+            transform: none;
+        }
+        .result-card { 
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+        .result-emoji { font-size: 80px; margin-bottom: 20px; }
+        .result-grade { font-size: 40px; font-weight: bold; margin-bottom: 10px; }
+        .result-score { font-size: 24px; }
+        .progress-bar { 
+            width: 100%;
+            background: rgba(255,255,255,0.3);
+            border-radius: 20px;
+            height: 16px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        .progress-fill { 
+            height: 100%;
+            background: white;
+            transition: width 0.8s ease;
+            border-radius: 20px;
+        }
+        .answer-review { 
+            border: 3px solid;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        .answer-review.correct { border-color: #10b981; background: #ecfdf5; }
+        .answer-review.incorrect { border-color: #ef4444; background: #fef2f2; }
+        .review-header { display: flex; gap: 15px; }
+        .review-icon { font-size: 28px; }
+        .review-option { 
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            background: white;
+        }
+        .review-option.correct-answer { 
+            background: #86efac;
+            border: 2px solid #10b981;
+            font-weight: 600;
+        }
+        .review-option.wrong-answer { 
+            background: #fca5a5;
+            border: 2px solid #ef4444;
+        }
+        .btn-secondary { background: #e0e0e0; color: #333; }
+        .btn-secondary:hover { background: #d0d0d0; }
+        .hidden { display: none !important; }
+        .emoji-large { font-size: 80px; text-align: center; margin-bottom: 30px; }
+        
+        @media (max-width: 768px) {
+            .two-column, .stats-grid { grid-template-columns: 1fr; }
+            h1 { font-size: 32px; }
+            h2 { font-size: 28px; }
+            .slide-content { padding: 30px 20px; }
+        }
+    </style>
 </head>
 <body>
-    <div id="root"></div>
-    <script type="text/babel" src="presentation.jsx"></script>
+    <div class="container">
+        <div id="presentationView">
+            <div class="slide-box">
+                <div class="slide-content">
+                    <div id="slideContent"></div>
+                </div>
+            </div>
+            <div class="controls">
+                <button class="btn btn-primary" id="prevBtn">← Назад</button>
+                <div class="progress">
+                    <button class="btn btn-quiz" id="quizBtn">📋 Пройти тест</button>
+                    <span class="slide-number" id="slideNumber">1 / 15</span>
+                    <div class="dots" id="dots"></div>
+                </div>
+                <button class="btn btn-primary" id="nextBtn">Вперед →</button>
+            </div>
+        </div>
+
+        <div id="quizView" class="hidden">
+            <div class="quiz-container">
+                <div class="quiz-header">
+                    <h2 class="quiz-title">📋 Тест на знание материала</h2>
+                    <button class="btn btn-secondary" id="backBtn">Назад к презентации</button>
+                </div>
+                <div id="quizContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Данные
+        const slides = [
+            {title:"Низкая физическая активность",subtitle:"Поведенческий фактор риска неинфекционных заболеваний",type:"title"},
+            {title:"Определение проблемы",type:"content",points:["Физическая инертность — недостаточный уровень двигательной активности для поддержания здоровья","ВОЗ рекомендует взрослым 150-300 минут умеренной активности в неделю","Гиподинамия признана четвертым фактором риска глобальной смертности","27,5% взрослого населения мира недостаточно активны"]},
+            {title:"Масштаб проблемы",type:"stats",stats:[{value:"1,4 млрд",label:"человек с низкой активностью"},{value:"5 млн",label:"смертей ежегодно"},{value:"$54 млрд",label:"прямые расходы здравоохранения"},{value:"6-10%",label:"основных НИЗ связаны с гиподинамией"}]},
+            {title:"Причины низкой активности",type:"content",points:["Урбанизация и изменение образа жизни","Сидячий характер работы (офисный труд)","Развитие транспортных технологий","Цифровизация досуга и развлечений","Недостаток безопасных мест для активности","Низкая мотивация и отсутствие культуры движения"]},
+            {title:"Группы риска",type:"content",points:["Офисные работники и специалисты умственного труда","Пожилые люди (старше 60 лет)","Женщины (на 8% менее активны, чем мужчины)","Подростки (81% недостаточно активны)","Лица с низким социально-экономическим статусом","Жители мегаполисов"]},
+            {title:"Последствия для здоровья",type:"two-column",left:{title:"Физические",items:["Сердечно-сосудистые заболевания","Сахарный диабет 2 типа","Ожирение","Остеопороз","Некоторые виды рака","Метаболический синдром"]},right:{title:"Психологические",items:["Депрессия","Тревожные расстройства","Снижение когнитивных функций","Бессонница","Хронический стресс","Низкая самооценка"]}},
+            {title:"Влияние на организм",type:"content",points:["Увеличение риска ИБС на 30%","Повышение риска инсульта на 35%","Риск диабета 2 типа возрастает на 50%","Вероятность рака толстой кишки выше на 30%","Снижение продолжительности жизни на 3-5 лет","Ускорение биологического старения"]},
+            {title:"Социально-экономические последствия",type:"content",points:["Снижение производительности труда","Увеличение дней нетрудоспособности","Рост расходов на здравоохранение","Снижение качества жизни населения","Преждевременный выход на пенсию","Потеря человеческого капитала"]},
+            {title:"Механизмы профилактики",type:"content",points:["Индивидуальный уровень: мотивация к изменению поведения","Межличностный: поддержка семьи и друзей","Организационный: корпоративные программы здоровья","Общественный: создание инфраструктуры для движения","Государственный: политика и программы по укреплению здоровья"]},
+            {title:"Рекомендации ВОЗ",type:"two-column",left:{title:"Взрослые (18-64 года)",items:["150-300 мин умеренной активности","75-150 мин интенсивной активности","Силовые упражнения 2+ раза в неделю","Ограничить сидячий образ жизни"]},right:{title:"Пожилые (65+)",items:["То же + упражнения на баланс","Функциональные упражнения 3+ раза в неделю","Адаптация интенсивности","Регулярность важнее интенсивности"]}},
+            {title:"Стратегии вмешательства",type:"content",points:["Информационные кампании и образовательные программы","Создание велодорожек и пешеходных зон","Программы на рабочем месте (производственная гимнастика)","Популяризация активного транспорта","Развитие массового спорта и фитнеса","Мобильные приложения и носимые устройства"]},
+            {title:"Барьеры и их преодоление",type:"two-column",left:{title:"Барьеры",items:["Нехватка времени","Усталость","Отсутствие мотивации","Финансовые ограничения","Незнание как начать","Страх травм"]},right:{title:"Решения",items:["Короткие тренировки (10-15 мин)","Активность дает энергию","Постановка целей, трекинг","Бесплатные варианты (ходьба)","Консультации специалистов","Постепенное начало"]}},
+            {title:"Примеры успешных программ",type:"content",points:["«10 000 шагов» — международная программа мотивации","Bike to Work — программы велосипедных поездок на работу","Active Living — комплексные городские проекты","Корпоративный фитнес в крупных компаниях","Школьные программы физического воспитания","Сообщества бегунов и любителей скандинавской ходьбы"]},
+            {title:"Роль медицинских работников",type:"content",points:["Скрининг уровня физической активности пациентов","Консультирование и «выписывание» физических упражнений","Мотивационное интервьюирование","Направление к специалистам по ЛФК","Мониторинг прогресса и поддержка","Личный пример здорового образа жизни"]},
+            {title:"Выводы и рекомендации",type:"conclusion",points:["Низкая физическая активность — глобальная проблема общественного здоровья","Требует комплексного подхода на всех уровнях","Даже небольшая активность лучше, чем ничего","Профилактика эффективнее и дешевле лечения","Каждый может внести вклад в решение проблемы"]}
+        ];
+
+        const quiz = [
+            {q:"Сколько минут умеренной физической активности в неделю рекомендует ВОЗ для взрослых?",o:["50-100 минут","150-300 минут","400-500 минут","600-700 минут"],c:1},
+            {q:"Какой процент взрослого населения мира недостаточно активен?",o:["15%","27,5%","40%","50%"],c:1},
+            {q:"На сколько процентов увеличивается риск ИБС при низкой физической активности?",o:["10%","20%","30%","50%"],c:2},
+            {q:"Сколько смертей ежегодно связано с низкой физической активностью?",o:["1 млн","3 млн","5 млн","10 млн"],c:2},
+            {q:"Какая группа населения наиболее подвержена низкой физической активности?",o:["Дети 5-10 лет","Подростки","Молодые взрослые","Все группы одинаково"],c:1},
+            {q:"На сколько лет может сократиться продолжительность жизни при гиподинамии?",o:["1-2 года","3-5 лет","7-10 лет","более 10 лет"],c:1},
+            {q:"Каким по значимости фактором риска глобальной смертности признана гиподинамия?",o:["Первым","Вторым","Третьим","Четвертым"],c:3},
+            {q:"Какие расходы на здравоохранение связаны с низкой физической активностью?",o:["$10 млрд","$30 млрд","$54 млрд","$100 млрд"],c:2},
+            {q:"Какой процент основных неинфекционных заболеваний связан с гиподинамией?",o:["2-4%","6-10%","15-20%","25-30%"],c:1},
+            {q:"Сколько раз в неделю рекомендуется выполнять силовые упражнения?",o:["1 раз","2 или более раз","4 раза","Ежедневно"],c:1}
+        ];
+
+        let state = {current:0, answers:{}, done:false, score:0};
+
+        // Рендер слайда
+        function render() {
+            const s = slides[state.current];
+            const el = document.getElementById('slideContent');
+            let html = '';
+
+            if(s.type==='title') {
+                html = '<div class="emoji-large">⚡</div><h1>'+s.title+'</h1><p class="subtitle">'+s.subtitle+'</p>';
+            } else if(s.type==='content') {
+                html = '<h2>'+s.title+'</h2>';
+                s.points.forEach(p => html += '<div class="point"><div class="bullet"></div><p class="point-text">'+p+'</p></div>');
+            } else if(s.type==='stats') {
+                html = '<h2 style="text-align:center;">'+s.title+'</h2><div class="stats-grid">';
+                s.stats.forEach(st => html += '<div class="stat-card"><div class="stat-value">'+st.value+'</div><div class="stat-label">'+st.label+'</div></div>');
+                html += '</div>';
+            } else if(s.type==='two-column') {
+                html = '<h2 style="text-align:center;">'+s.title+'</h2><div class="two-column"><div class="column"><h3>'+s.left.title+'</h3>';
+                s.left.items.forEach(i => html += '<div class="column-item"><span class="check">✓</span><p class="item-text">'+i+'</p></div>');
+                html += '</div><div class="column"><h3>'+s.right.title+'</h3>';
+                s.right.items.forEach(i => html += '<div class="column-item"><span class="check">✓</span><p class="item-text">'+i+'</p></div>');
+                html += '</div></div>';
+            } else if(s.type==='conclusion') {
+                html = '<h2 style="text-align:center;">'+s.title+'</h2><div class="column">';
+                s.points.forEach(p => html += '<div class="column-item" style="margin-bottom:20px;"><span style="font-size:24px;margin-right:15px;">🎯</span><p style="font-size:20px;color:white;font-weight:500;">'+p+'</p></div>');
+                html += '</div>';
+            }
+
+            el.innerHTML = html;
+            document.getElementById('slideNumber').textContent = (state.current+1)+' / '+slides.length;
+            document.getElementById('prevBtn').disabled = state.current===0;
+            document.getElementById('nextBtn').disabled = state.current===slides.length-1;
+            
+            let dots = '';
+            slides.forEach((_, i) => dots += '<button class="dot '+(i===state.current?'active':'')+'" onclick="go('+i+')"></button>');
+            document.getElementById('dots').innerHTML = dots;
+        }
+
+        function go(n) { state.current=n; render(); }
+        function next() { if(state.current<slides.length-1) go(state.current+1); }
+        function prev() { if(state.current>0) go(state.current-1); }
+
+        // Квиз
+        function showQ() {
+            document.getElementById('presentationView').classList.add('hidden');
+            document.getElementById('quizView').classList.remove('hidden');
+            renderQ();
+        }
+
+        function hideQ() {
+            document.getElementById('quizView').classList.add('hidden');
+            document.getElementById('presentationView').classList.remove('hidden');
+        }
+
+        function renderQ() {
+            const el = document.getElementById('quizContent');
+            if(!state.done) {
+                let html = '';
+                quiz.forEach((q,i) => {
+                    html += '<div class="question"><div class="question-text">'+(i+1)+'. '+q.q+'</div>';
+                    q.o.forEach((opt,j) => {
+                        html += '<button class="option '+(state.answers[i]===j?'selected':'')+'" onclick="sel('+i+','+j+')"><span class="radio"><span class="radio-inner"></span></span>'+opt+'</button>';
+                    });
+                    html += '</div>';
+                });
+                const cnt = Object.keys(state.answers).length;
+                html += '<button class="submit-btn" '+(cnt<quiz.length?'disabled':'')+' onclick="submit()">';
+                html += cnt<quiz.length ? 'Ответьте на все вопросы ('+cnt+'/'+quiz.length+')' : 'Проверить результаты';
+                html += '</button>';
+                el.innerHTML = html;
+            } else {
+                const g = grade(state.score);
+                let html = '<div class="result-card"><div class="result-emoji">'+g.e+'</div><div class="result-grade">'+g.t+'</div><div class="result-score">Ваш результат: <strong>'+state.score+'</strong> из '+quiz.length+'</div><div class="progress-bar"><div class="progress-fill" style="width:'+(state.score/quiz.length*100)+'%"></div></div></div>';
+                
+                quiz.forEach((q,i) => {
+                    const ok = state.answers[i]===q.c;
+                    html += '<div class="answer-review '+(ok?'correct':'incorrect')+'"><div class="review-header"><span class="review-icon">'+(ok?'✓':'✗')+'</span><div style="flex:1;"><div class="question-text">'+(i+1)+'. '+q.q+'</div>';
+                    q.o.forEach((opt,j) => {
+                        const cls = j===q.c ? 'correct-answer' : (j===state.answers[i] && !ok ? 'wrong-answer' : '');
+                        html += '<div class="review-option '+cls+'">'+opt;
+                        if(j===q.c) html += '<span style="margin-left:8px;color:#166534;">✓ Правильный ответ</span>';
+                        if(j===state.answers[i] && !ok) html += '<span style="margin-left:8px;color:#991b1b;">✗ Ваш ответ</span>';
+                        html += '</div>';
+                    });
+                    html += '</div></div></div>';
+                });
+                
+                html += '<div style="display:flex;gap:15px;margin-top:30px;"><button class="btn btn-quiz" style="flex:1;padding:18px;font-size:18px;" onclick="reset()">Пройти тест заново</button><button class="btn btn-secondary" style="flex:1;padding:18px;font-size:18px;" onclick="hideQ()">Вернуться к презентации</button></div>';
+                el.innerHTML = html;
+            }
+        }
+
+        function sel(q,a) { if(!state.done) { state.answers[q]=a; renderQ(); } }
+        function submit() {
+            state.score = 0;
+            quiz.forEach((q,i) => { if(state.answers[i]===q.c) state.score++; });
+            state.done = true;
+            renderQ();
+        }
+        function reset() { state.answers={}; state.done=false; state.score=0; renderQ(); }
+        function grade(s) {
+            if(s>=9) return {t:"Отлично!",e:"🌟"};
+            if(s>=7) return {t:"Хорошо!",e:"👍"};
+            if(s>=5) return {t:"Удовлетворительно",e:"📚"};
+            return {t:"Нужно повторить материал",e:"📖"};
+        }
+
+        // События
+        document.getElementById('prevBtn').onclick = prev;
+        document.getElementById('nextBtn').onclick = next;
+        document.getElementById('quizBtn').onclick = showQ;
+        document.getElementById('backBtn').onclick = hideQ;
+
+        // Инициализация
+        render();
+    </script>
 </body>
-
 </html>
-
